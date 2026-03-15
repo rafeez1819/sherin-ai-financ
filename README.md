@@ -24,41 +24,102 @@ awesome-testing.comMermaid diagrams: When AI Meets Documentation | Awesome Testi
 Example: Sequence diagram for AI pipelines (perfect for your Kafka → Flink → KG flow)
 2. Full Repository Directory Tree (Copy-Paste This Into GitHub)
 Bashsherin-ai-financial-intelligence/
-├── README.md                  # Hero + Mermaid diagrams + quick start
-├── ARCHITECTURE.md            # Full system diagrams
-├── ROADMAP.md                 # Phases 1–6 with Gantt
-├── LICENSE                    # MIT (or Apache 2.0)
-├── .gitignore
+sherin-ai-financial-intelligence/
 ├── .github/
 │   └── workflows/
-│       ├── ci-cd.yml          # Tests + Docker build
-│       └── deploy-terraform.yml
+│       ├── ci-cd.yml                  # GitHub Actions: lint, test, build docker images
+│       └── deploy-terraform.yml       # Optional: plan/apply Terraform (with approval gates)
 ├── docs/
-│   ├── comparisons.md         # vs Freqtrade, FinRL, Bloomberg
+│   ├── architecture.md                # High-level system diagrams + explanations
+│   ├── comparisons.md                 # vs Freqtrade, FinRL, QLib, Bloomberg, TradingView, etc.
+│   ├── contributing.md
 │   ├── phase-plans/
-│   │   ├── phase1.md
-│   │   ├── ...
-│   │   └── phase6.md
-│   └── images/                # Rendered Mermaid PNGs (auto-generated)
+│   │   ├── phase-1-data-foundation.md
+│   │   ├── phase-2-intelligence-layer.md
+│   │   ├── phase-3-prediction-engine.md
+│   │   ├── phase-4-autonomous-intelligence.md
+│   │   ├── phase-5-explainable-ai-radar.md
+│   │   └── phase-6-portfolio-governance.md
+│   └── images/                        # Rendered Mermaid diagrams as PNG/SVG (optional backup)
 ├── infrastructure/
-│   ├── docker-compose.yml     # Full stack (your updated version)
-│   ├── terraform/             # AWS MSK + RDS + OpenSearch
-│   └── feast-feature-store/
+│   ├── docker-compose.yml             # Local dev + full stack (Kafka, Schema Registry, Neo4j, etc.)
+│   ├── docker/                        # Individual Dockerfiles
+│   │   ├── Dockerfile.reuters
+│   │   ├── Dockerfile.bloomberg
+│   │   ├── Dockerfile.rss
+│   │   ├── Dockerfile.nlp-processor
+│   │   ├── Dockerfile.kg-consumer
+│   │   └── Dockerfile.fastapi         # For serving KG queries / trading signals
+│   ├── terraform/
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   ├── outputs.tf
+│   │   ├── modules/
+│   │   │   ├── msk/
+│   │   │   ├── rds-macro/
+│   │   │   ├── opensearch-news/
+│   │   │   └── eks-ray/
+│   │   └── environments/
+│   │       ├── dev.tfvars
+│   │       └── prod.tfvars
+│   └── feast-feature-store/           # Feast repo definitions + feature views
 ├── src/
-│   ├── phase1/                # Data Foundation
+│   ├── common/                        # Shared utilities, config loaders, logging
+│   ├── phase1-data-foundation/
 │   │   ├── news-ingestion/
+│   │   │   ├── reuters_ingestor.py
+│   │   │   ├── bloomberg_ingestor.py
+│   │   │   ├── rss_ingestor.py
+│   │   │   └── register-schemas.sh
 │   │   ├── market-pipeline/
+│   │   │   └── binance-websocket.py   # + Polygon/TwelveData connectors
 │   │   └── macro-engine/
-│   ├── phase2/                # Intelligence Layer + Knowledge Graph
-│   ├── phase3/                # Prediction Engine
-│   ├── phase4/                # Autonomous Agent
-│   ├── phase5/                # Global Macro Radar + Explainable AI
-│   └── phase6/                # Portfolio Manager + Governance
-├── models/                    # FinBERT, LSTM, GNN checkpoints
-├── notebooks/                 # Experimentation only
-├── data/                      # Sample datasets (gitignore raw)
-├── configs/                   # YAML for models, Kafka topics, schemas
-└── tests/                     # Unit + integration per phase
+│   │       └── fred-airflow-dag.py
+│   ├── phase2-intelligence-layer/
+│   │   ├── kg-consumer.py             # news_processed → Neo4j
+│   │   ├── finbert-event-classifier.py
+│   │   └── sentiment-enricher.py
+│   ├── phase3-prediction-engine/
+│   │   ├── sector-forecast/
+│   │   ├── regime-detection/
+│   │   └── probability-engine/
+│   ├── phase4-autonomous-agent/
+│   │   ├── rl-trading-agent/          # PPO / DQN implementation
+│   │   └── broker-connectors/         # Binance, IBKR, MT5 stubs
+│   ├── phase5-explainable-ai-radar/
+│   │   ├── macro-radar-fastapi.py
+│   │   ├── shap-explainability.py
+│   │   └── counterfactual-simulator.py
+│   └── phase6-portfolio-governance/
+│       ├── portfolio-optimizer.py     # MPT + RL allocation
+│       └── model-governance/          # Versioning, drift detection, retraining triggers
+├── models/                            # .gitignored checkpoints + small sample weights
+│   └── README.md                      # Where to download/store large models
+├── notebooks/
+│   ├── 01-exploratory-data-analysis/
+│   ├── 02-backtesting-signals/
+│   └── 03-scenario-simulation/
+├── configs/
+│   ├── kafka/
+│   │   └── topics.yaml
+│   ├── schemas/
+│   │   ├── news_raw.avsc
+│   │   └── news_processed.avsc
+│   ├── models/
+│   └── app/
+│       └── config.yaml                # API keys, endpoints, thresholds
+├── tests/
+│   ├── unit/
+│   ├── integration/
+│   └── e2e/
+├── data/                              # .gitignored – only small samples or metadata
+│   └── samples/
+├── .dockerignore
+├── .gitignore
+├── LICENSE                            # MIT / Apache 2.0 recommended
+├── README.md                          # Hero section + mermaid diagrams + quickstart
+├── ROADMAP.md                         # Detailed phase-by-phase plan with Gantt
+└── pyproject.toml                     # or requirements.txt + poetry/pipenv lock file
 3. README.md (Copy-Paste Ready – This Is Your Public Face)
 Markdown# Sherin AI Financial Intelligence Platform
 
